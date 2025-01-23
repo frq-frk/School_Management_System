@@ -2,9 +2,11 @@ package com.saiayns.sms.dto;
 
 import java.time.LocalDate;
 
+import com.saiayns.sms.model.enums.AttendanceStatusEnum;
+
 public class AttendanceDTO {
 	private LocalDate date = LocalDate.now();
-    private String status;
+    private AttendanceStatusEnum status;
     
 	public LocalDate getDate() {
 		return date;
@@ -12,10 +14,10 @@ public class AttendanceDTO {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	public String getStatus() {
+	public AttendanceStatusEnum getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(AttendanceStatusEnum status) {
 		this.status = status;
 	}
 }

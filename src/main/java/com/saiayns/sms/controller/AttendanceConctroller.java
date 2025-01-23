@@ -1,6 +1,5 @@
 package com.saiayns.sms.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,10 @@ import com.saiayns.sms.model.Attendance;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.AttendanceService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "BearerAuth")
 @RequestMapping("/api/attendance")
 public class AttendanceConctroller {
 	

@@ -22,14 +22,6 @@ public class Student {
     private StudentClass studentClass;
     private String guardianName;
     private String guardianPhone;
-    
-//	public Student(String name, String studentClass, String guardianName, String guardianPhone) {
-//		super();
-//		this.name = name;
-//		this.studentClass = studentClass;
-//		this.guardianName = guardianName;
-//		this.guardianPhone = guardianPhone;
-//	}
 	
 	public Student() {
 		super();

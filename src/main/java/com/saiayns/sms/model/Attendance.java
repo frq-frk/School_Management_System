@@ -2,7 +2,11 @@ package com.saiayns.sms.model;
 
 import java.time.LocalDate;
 
+import com.saiayns.sms.model.enums.AttendanceStatusEnum;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +24,9 @@ public class Attendance {
     private Student student;
 
     private LocalDate date = LocalDate.now();
-    private String status;
+    
+    @Enumerated(EnumType.STRING)
+    private AttendanceStatusEnum status;
     
 	public Long getId() {
 		return id;
@@ -40,10 +46,10 @@ public class Attendance {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-	public String getStatus() {
+	public AttendanceStatusEnum getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(AttendanceStatusEnum status) {
 		this.status = status;
 	}
     

@@ -18,7 +18,10 @@ import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.StudentService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
+@SecurityRequirement(name = "BearerAuth")
 @RequestMapping("/api/students")
 public class StudentController {
 	

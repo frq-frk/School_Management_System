@@ -35,6 +35,10 @@ public class StudentService {
 		return studentRepo.findById(id);
 	}
 	
+	public List<Student> getStudentsByPhone(String guardianPhone){
+		return studentRepo.findByGuardianPhone(guardianPhone);
+	}
+	
 	public Student updateStudent(Long studentId, Student updatedDetails) {
 		Optional<Student> existingStudentOpt = studentRepo.findById(studentId);
 
