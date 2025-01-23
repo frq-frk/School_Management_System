@@ -1,6 +1,9 @@
 package com.saiayns.sms.model;
 
+import java.time.LocalDate;
+
 import com.saiayns.sms.model.enums.StudentClass;
+import com.saiayns.sms.model.enums.StudentGender;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,6 +25,12 @@ public class Student {
     private StudentClass studentClass;
     private String guardianName;
     private String guardianPhone;
+    private String guardianEmail;
+    
+    @Enumerated(EnumType.STRING)
+    private StudentGender gender;
+    private LocalDate dateOfBirth;
+    private String address;
 	
 	public Student() {
 		super();
@@ -56,5 +65,37 @@ public class Student {
 	}
 	public void setGuardianPhone(String guardianPhone) {
 		this.guardianPhone = guardianPhone;
+	}
+
+	public String getGuardianEmail() {
+		return guardianEmail;
+	}
+
+	public void setGuardianEmail(String guardianEmail) {
+		this.guardianEmail = guardianEmail;
+	}
+
+	public StudentGender getGender() {
+		return gender;
+	}
+
+	public void setGender(StudentGender gender) {
+		this.gender = gender;
+	}
+
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

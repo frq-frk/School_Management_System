@@ -28,4 +28,10 @@ public class UserController {
         User user = userService.registerAdmin(email, password);
         return ResponseEntity.ok(user);
     }
+    
+    @PostMapping("/update-password")
+    public ResponseEntity<User> updatePassword(@RequestParam String email, @RequestParam String password, @RequestParam String newPassword){
+    	User user = userService.updatePassword(email, password, newPassword);
+        return ResponseEntity.ok(user);
+    }
 }

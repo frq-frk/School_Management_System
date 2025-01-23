@@ -51,6 +51,10 @@ public class StudentService {
         existingStudent.setStudentClass(updatedDetails.getStudentClass());
         existingStudent.setGuardianName(updatedDetails.getGuardianName());
         existingStudent.setGuardianPhone(updatedDetails.getGuardianPhone());
+        existingStudent.setGuardianEmail(updatedDetails.getGuardianEmail());
+        existingStudent.setGender(updatedDetails.getGender());
+        existingStudent.setAddress(updatedDetails.getAddress());
+        existingStudent.setDateOfBirth(updatedDetails.getDateOfBirth());
 
         return studentRepo.save(existingStudent);
 	}
