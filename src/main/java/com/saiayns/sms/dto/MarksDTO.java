@@ -1,15 +1,16 @@
 package com.saiayns.sms.dto;
 
 public class MarksDTO {
-	private String subject;
+	private Long subject_id;
     private Integer marksObtained;
     private String term;
+    private String remarks;
     
-	public String getSubject() {
-		return subject;
+	public Long getSubjectId() {
+		return subject_id;
 	}
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setSubjectId(Long subject_id) {
+		this.subject_id = subject_id;
 	}
 	public Integer getMarksObtained() {
 		return marksObtained;
@@ -23,4 +24,11 @@ public class MarksDTO {
 	public void setTerm(String term) {
 		this.term = term;
 	}
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+	
 }

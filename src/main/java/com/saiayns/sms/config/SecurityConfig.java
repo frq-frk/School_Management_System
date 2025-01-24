@@ -15,41 +15,44 @@ import com.saiayns.sms.security.JwtAuthenticationFilter;
 @Configuration
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
+	public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+	}
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()) // Disable CSRF
-                .authorizeHttpRequests(auth -> auth
-                        // Permit these endpoints without authentication
-                        .requestMatchers(
-                                "/api/user/**", 
-                                "/v3/api-docs/**", 
-                                "/swagger-ui.html", 
-                                "/swagger-ui/**", 
-                                "/api/marks/download-request/{student-id}", 
-                                "/api/marks/download-validate"
-                        ).permitAll()
-                        // Authenticate all other requests
-                        .anyRequest().authenticated())
-                // Add the JWT authentication filter before username-password auth
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http.csrf(csrf -> csrf.disable()) // Disable CSRF
+				.cors(cors -> cors.configurationSource(request -> {
+					org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
+					config.addAllowedOrigin("*"); // Allow all origins. Change to specific origins in production for
+													// security.
+					config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+					config.addAllowedHeader("*"); // Allow all headers
+					config.setAllowCredentials(false); // Set to true if you allow cookies
+					return config;
+				})).authorizeHttpRequests(auth -> auth
+						// Permit these endpoints without authentication
+						.requestMatchers("/api/user/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",
+								"/api/marks/download-request", "/api/marks/download-validate", "/api/terms/get")
+						.permitAll()
+						// Authenticate all other requests
+						.anyRequest().authenticated())
+				// Add the JWT authentication filter before username-password auth
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+		return http.build();
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
+		return authenticationConfiguration.getAuthenticationManager();
+	}
 }

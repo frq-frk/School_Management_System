@@ -17,9 +17,11 @@ public class Marks {
     @JoinColumn(name = "student_id")
     private Student student;
 
-    private String subject;
+    @ManyToOne
+    @JoinColumn(name = "subject_id")
+    private Subject subject;
     private Integer marksObtained;
-    private String term;
+    private String remarks;
     
 	public Long getId() {
 		return id;
@@ -33,10 +35,10 @@ public class Marks {
 	public void setStudent(Student student) {
 		this.student = student;
 	}
-	public String getSubject() {
+	public Subject getSubject() {
 		return subject;
 	}
-	public void setSubject(String subject) {
+	public void setSubject(Subject subject) {
 		this.subject = subject;
 	}
 	public Integer getMarksObtained() {
@@ -45,10 +47,10 @@ public class Marks {
 	public void setMarksObtained(Integer marksObtained) {
 		this.marksObtained = marksObtained;
 	}
-	public String getTerm() {
-		return term;
+	public String getRemarks() {
+		return remarks;
 	}
-	public void setTerm(String term) {
-		this.term = term;
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 }

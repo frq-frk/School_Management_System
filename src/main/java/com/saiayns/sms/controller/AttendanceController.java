@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saiayns.sms.dto.AttendanceDTO;
+import com.saiayns.sms.dto.AttendanceRequest;
 import com.saiayns.sms.model.Attendance;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.AttendanceService;
@@ -21,7 +22,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 @RestController
 @SecurityRequirement(name = "BearerAuth")
 @RequestMapping("/api/attendance")
-public class AttendanceConctroller {
+public class AttendanceController {
 	
 	@Autowired
 	AttendanceService attendanceService;
@@ -30,6 +31,12 @@ public class AttendanceConctroller {
 	public ResponseEntity<Attendance> markAttendance(@RequestParam("student_id") Long studentId, @RequestBody AttendanceDTO attendanceDetails) {
 		return ResponseEntity.ok(attendanceService.markAttendance(attendanceDetails, studentId));
 	}
+	
+	@PostMapping("mark-class/{student-class}")
+    public ResponseEntity<String> markClassAttendance(@RequestParam("student-class") StudentClass studentClass, @RequestBody List<AttendanceRequest> attendanceRequests) {
+        attendanceService.markClassAttendance(studentClass, attendanceRequests);
+        return ResponseEntity.ok("Attendance marked for the whole class.");
+    }
 	
 	@GetMapping("get/{studentClass}/{date}")
 	public ResponseEntity<List<Attendance>> getAttendanceOfClassByDate(@RequestParam("studentClass") StudentClass studentClass, @RequestParam("date") String date){

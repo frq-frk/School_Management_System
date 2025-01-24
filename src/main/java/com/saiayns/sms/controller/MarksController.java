@@ -33,25 +33,25 @@ public class MarksController {
 	}
 
 	@GetMapping("/get/{term}/{student-id}")
-	public ResponseEntity<List<Marks>> getMarksOfTermByStudent(@RequestParam("term") String term,
+	public ResponseEntity<List<Marks>> getMarksOfTermByStudent(@RequestParam("term") Long term,
 			@RequestParam("student-id") Long studentId) {
 		return ResponseEntity.ok(marksService.getMarksOfTermByStudent(term, studentId));
 	}
 
 	@GetMapping("/get/{term}/{class}/{subject}")
-	public ResponseEntity<List<Marks>> getMarksOfTermBySubject(@RequestParam("term") String term,
-			@RequestParam("class") String studentClass, @RequestParam("subject") String subject) {
+	public ResponseEntity<List<Marks>> getMarksOfTermBySubject(@RequestParam("term") Long term,
+			@RequestParam("class") String studentClass, @RequestParam("subject") Long subject) {
 		return ResponseEntity.ok(marksService.getMarksOfTermByClassAndSubject(term, studentClass, subject));
 	}
 
-	@PostMapping("/download-request/{guardian-phone}")
-	public ResponseEntity<List<Student>> requestMarksSheet(@RequestParam("guardian-phone") String guardianPhone) {
+	@PostMapping("/download-request")
+	public ResponseEntity<List<Student>> requestMarksSheet(@RequestParam("guardianPhone") String guardianPhone) {
 		List<Student> studentsList =  marksService.generateOTP(guardianPhone);
 		return ResponseEntity.ok(studentsList);
 	}
 
 	@PostMapping("/download-validate")
-	public ResponseEntity<?> validateAndDownloadMarksSheet(@RequestParam Long studentId, @RequestParam String term,
+	public ResponseEntity<?> validateAndDownloadMarksSheet(@RequestParam Long studentId, @RequestParam long term,
 			@RequestParam String otp) {
 		// Validate OTP
 		boolean isValid = marksService.validateOTP(studentId, otp);

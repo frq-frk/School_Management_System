@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.saiayns.sms.dto.MarksDTO;
 import com.saiayns.sms.model.Marks;
 import com.saiayns.sms.model.Student;
+import com.saiayns.sms.model.Subject;
+import com.saiayns.sms.model.Term;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.notifications.impl.SMSNotificationService;
 import com.saiayns.sms.repository.MarksRepository;
@@ -30,6 +32,12 @@ public class MarksService {
 	private StudentService studentService;
 	
 	@Autowired
+	private TermService termService;
+	
+	@Autowired
+	private SubjectService subService;
+	
+	@Autowired
 	private OTPService otpService;
 	
 	@Autowired
@@ -37,29 +45,38 @@ public class MarksService {
 	
 	public Marks addMarks(Long studentId, MarksDTO marks) {
 		Student studentObject = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
+		Subject subjectObject = subService.getSubjectById(marks.getSubjectId()).orElseThrow(NoSuchElementException::new);
 		Marks marksObj = new Marks();
 		marksObj.setStudent(studentObject);
-		marksObj.setSubject(marks.getSubject());
-		marksObj.setTerm(marks.getTerm());
+		marksObj.setSubject(subjectObject);
 		marksObj.setMarksObtained(marks.getMarksObtained());
+		marksObj.setRemarks(marks.getRemarks());
 		return marksRepo.save(marksObj);
 	}
 	
-	public List<Marks> getMarksOfTermByStudent(String term, Long studentId){
+	public List<Marks> getMarksOfTermByStudent(Long termId, Long studentId){
 		Student studentObject = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
-		return marksRepo.findByTermAndStudent(term, studentObject);
+		Term termObject = termService.getTermById(termId).orElseThrow(NoSuchElementException::new);
+		return marksRepo.findBySubject_TermAndStudent(termObject, studentObject);
 	}
 	
-	public List<Marks> getMarksOfTermByClassAndSubject(String term, String studentClass, String subject){
-		return marksRepo.findByTermAndSubject(term, subject).stream()
-				.filter(tempMarks -> tempMarks.getStudent().getStudentClass().equals(StudentClass.valueOf(studentClass)))
-				.toList();
+	public List<Marks> getMarksOfTermByClassAndSubject(Long termId, String studentClass, Long subjectId){
+		 // Fetch Term and Subject entities from their respective repositories
+	    Term term = termService.getTermById(termId)
+	            .orElseThrow(() -> new RuntimeException("Term not found with ID: " + termId));
+	    Subject subject = subService.getSubjectById(subjectId)
+	            .orElseThrow(() -> new RuntimeException("Subject not found with ID: " + subjectId));
+
+	    // Fetch marks using the repository query
+	    return marksRepo.findBySubject_TermAndSubject(term, subject).stream()
+	            .filter(tempMarks -> tempMarks.getStudent().getStudentClass().equals(StudentClass.valueOf(studentClass)))
+	            .toList();
 	}
 	
 	public List<Student> generateOTP(String guardianPhone) {
 		List<Student> studentObject = studentService.getStudentsByPhone(guardianPhone);
 		String otp = otpService.generateOTP(guardianPhone);
-		smsNotifyService.sendNotification("+916281276093", Helper.getOTPSMSMessage(otp));
+		smsNotifyService.sendNotification("+91"+guardianPhone, Helper.getOTPSMSMessage(otp));
 		return studentObject;
 	}
 	
@@ -68,9 +85,10 @@ public class MarksService {
 		return otpService.validateOTP(student.getGuardianPhone(), otp);
 	}
 	
-	public byte[] generateMarksSheet(Long studentId, String term) {
+	public byte[] generateMarksSheet(Long studentId, Long termId) {
 		Student student = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
-		List<Marks> marksList = marksRepo.findByTermAndStudent(term, student);
+		Term term = termService.getTermById(termId).orElseThrow(NoSuchElementException::new);
+		List<Marks> marksList = marksRepo.findBySubject_TermAndStudent(term, student);
 		// Generate PDF
         try (PDDocument document = new PDDocument(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             PDPage page = new PDPage();
@@ -140,11 +158,11 @@ public class MarksService {
                 for (Marks marks : marksList) {
                     contentStream.beginText();
                     contentStream.newLineAtOffset(50, yPosition);
-                    contentStream.showText(marks.getSubject());
+                    contentStream.showText(marks.getSubject().getName());
                     contentStream.newLineAtOffset(150, 0);
                     contentStream.showText(marks.getMarksObtained().toString());
                     contentStream.newLineAtOffset(150, 0);
-                    contentStream.showText(marks.getTerm());
+                    contentStream.showText(marks.getSubject().getTerm().getName());
                     contentStream.endText();
 
                     yPosition -= 20; // Move down for the next row
