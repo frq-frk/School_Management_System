@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiayns.sms.dto.AuthRequestDTO;
 import com.saiayns.sms.model.User;
 import com.saiayns.sms.service.UserService;
+import com.saiayns.sms.utils.SecurityHelperUtil;
 
 @RestController
 @RequestMapping("/api/user")
@@ -32,8 +33,9 @@ public class UserController {
     }
     
     @PostMapping("/update-password")
-    public ResponseEntity<User> updatePassword(@RequestParam String email, @RequestParam String password, @RequestParam String newPassword){
-    	User user = userService.updatePassword(email, password, newPassword);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<String> updatePassword(@RequestParam String password, @RequestParam String newPassword){
+    	String email = SecurityHelperUtil.getEmailFromSecurityContext();
+    	userService.updatePassword(email, password, newPassword);
+        return ResponseEntity.ok("Successfully updated the password");
     }
 }
