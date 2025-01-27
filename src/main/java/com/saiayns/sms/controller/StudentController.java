@@ -35,13 +35,19 @@ public class StudentController {
 		return ResponseEntity.ok(studentList);
 	}
 	
+	@GetMapping("/get")
+	public ResponseEntity<List<Student>> getAllStudents(){
+		List<Student> studentList = studentService.getAllStudents();
+		return ResponseEntity.ok(studentList);
+	}
+	
 	@PostMapping("/add")
 	public ResponseEntity<Student> addStudent(@RequestBody Student studentData){
 		return ResponseEntity.ok(studentService.addStudent(studentData));
 	}
 	
-	@PutMapping("/update/{student-id}")
-	public ResponseEntity<Student> updateStudent(@RequestParam("student-id") Long studentId, @RequestBody Student studentData){
+	@PutMapping("/update")
+	public ResponseEntity<Student> updateStudent(@RequestParam("studentId") Long studentId, @RequestBody Student studentData){
 		return ResponseEntity.ok(studentService.updateStudent(studentId, studentData));
 	}
 	
