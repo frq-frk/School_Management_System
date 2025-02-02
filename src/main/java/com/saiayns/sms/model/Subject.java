@@ -14,11 +14,17 @@ public class Subject {
     private Long id;
 
     private String name;
+    private String subCode;
     private Integer maxMarks;
+    private Integer passMarks;
 
     @ManyToOne
     @JoinColumn(name = "term_id")
     private Term term;
+    
+    @ManyToOne
+    @JoinColumn(name = "academic_year_id", nullable = false)
+    private AcademicYear academicYear;
 
 	public Long getId() {
 		return id;
@@ -50,6 +56,30 @@ public class Subject {
 
 	public void setTerm(Term term) {
 		this.term = term;
+	}
+
+	public AcademicYear getAcademicYear() {
+		return academicYear;
+	}
+
+	public void setAcademicYear(AcademicYear academicYear) {
+		this.academicYear = academicYear;
+	}
+
+	public String getSubCode() {
+		return subCode;
+	}
+
+	public void setSubCode(String subCode) {
+		this.subCode = subCode;
+	}
+
+	public Integer getPassMarks() {
+		return passMarks;
+	}
+
+	public void setPassMarks(Integer passMarks) {
+		this.passMarks = passMarks;
 	}
     
 }

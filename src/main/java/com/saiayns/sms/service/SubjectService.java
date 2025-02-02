@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.saiayns.sms.dto.SubjectDTO;
+import com.saiayns.sms.model.AcademicYear;
 import com.saiayns.sms.model.Subject;
 import com.saiayns.sms.model.Term;
 import com.saiayns.sms.repository.SubjectRepository;
@@ -19,13 +20,20 @@ public class SubjectService {
     
     @Autowired
     private TermService termService;
+    
+    @Autowired
+	AcademicYearService academicYearService;
 
     public Subject createSubject(SubjectDTO subject) {
     	Term term = termService.getTermById(subject.getTermId()).orElseThrow(NoSuchElementException::new);
+    	AcademicYear activeYear = academicYearService.getActiveAcademicYear();
     	Subject subjectObject = new Subject();
     	subjectObject.setMaxMarks(subject.getMaxMarks());
     	subjectObject.setName(subject.getName());
+    	subjectObject.setPassMarks(subject.getPassMarks());
+    	subjectObject.setSubCode(subject.getSubCode());
     	subjectObject.setTerm(term);
+    	subjectObject.setAcademicYear(activeYear);
         return subjectRepository.save(subjectObject);
     }
     
@@ -33,8 +41,10 @@ public class SubjectService {
     	return subjectRepository.findById(subId);
     }
 
-    public List<Subject> getSubjectsByTerm(Long termId) {
-        return subjectRepository.findByTermId(termId);
+    public List<SubjectDTO> getSubjectsByTerm(Long termId) {
+    	AcademicYear activeYear = academicYearService.getActiveAcademicYear();
+        List<Subject> subjectList = subjectRepository.findByTermIdAndAcademicYear(termId, activeYear);
+        return subjectList.stream().map(s -> SubjectDTO.toDTO(s)).toList();
     }
 }
 

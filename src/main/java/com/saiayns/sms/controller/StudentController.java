@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.saiayns.sms.dto.StudentDTO;
 import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.StudentService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.transaction.Transactional;
 
 @RestController
 @SecurityRequirement(name = "BearerAuth")
@@ -42,12 +44,12 @@ public class StudentController {
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<Student> addStudent(@RequestBody Student studentData){
+	public ResponseEntity<Student> addStudent(@RequestBody StudentDTO studentData){
 		return ResponseEntity.ok(studentService.addStudent(studentData));
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<Student> updateStudent(@RequestParam("studentId") Long studentId, @RequestBody Student studentData){
+	public ResponseEntity<Student> updateStudent(@RequestParam("studentId") Long studentId, @RequestBody StudentDTO studentData){
 		return ResponseEntity.ok(studentService.updateStudent(studentId, studentData));
 	}
 	
@@ -58,4 +60,26 @@ public class StudentController {
 				ResponseEntity.ok("Successfully added the students data into the database") :
 					ResponseEntity.ok("Error!! Couldn't create the data.");
 	}
+	
+	@PutMapping("/promote")
+	@Transactional
+	public ResponseEntity<String> promoteStudents(@RequestBody List<Long> studentIds) {
+		studentService.promoteStudents(studentIds);
+		return ResponseEntity.ok("Students promoted successfully.");
+	}
+	
+	@GetMapping("/get-recently-closed/{className}")
+	public ResponseEntity<List<Student>> getStudentsByClassFromRecentlyClosedAcademicYear(
+	        @PathVariable("className") StudentClass studentClass) {
+	    
+	    List<Student> studentList = studentService.getStudentsByClassFromRecentlyClosedAcademicYear(studentClass);
+	    return ResponseEntity.ok(studentList);
+	}
+
+	@GetMapping("/get-recently-closed")
+	public ResponseEntity<List<Student>> getAllStudentsFromRecentlyClosedAcademicYear() {
+	    List<Student> studentList = studentService.getAllStudentsFromRecentlyClosedAcademicYear();
+	    return ResponseEntity.ok(studentList);
+	}
+
 }

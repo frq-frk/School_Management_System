@@ -27,7 +27,7 @@ public class SubjectController {
     }
 
     @GetMapping("/term/{termId}")
-    public ResponseEntity<List<Subject>> getSubjectsByTerm(@PathVariable Long termId) {
+    public ResponseEntity<List<SubjectDTO>> getSubjectsByTerm(@PathVariable Long termId) {
         return ResponseEntity.ok(subjectService.getSubjectsByTerm(termId));
     }
 }

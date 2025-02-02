@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.saiayns.sms.dto.MarksDTO;
+import com.saiayns.sms.model.AcademicYear;
 import com.saiayns.sms.model.Marks;
 import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.Subject;
@@ -43,21 +44,27 @@ public class MarksService {
 	@Autowired
 	private SMSNotificationService smsNotifyService;
 	
+	@Autowired
+	private AcademicYearService academicYearService;
+	
 	public Marks addMarks(Long studentId, MarksDTO marks) {
 		Student studentObject = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
 		Subject subjectObject = subService.getSubjectById(marks.getSubjectId()).orElseThrow(NoSuchElementException::new);
+		AcademicYear activeYear = academicYearService.getActiveAcademicYear();
 		Marks marksObj = new Marks();
 		marksObj.setStudent(studentObject);
 		marksObj.setSubject(subjectObject);
 		marksObj.setMarksObtained(marks.getMarksObtained());
 		marksObj.setRemarks(marks.getRemarks());
+		marksObj.setAcademicYear(activeYear);
 		return marksRepo.save(marksObj);
 	}
 	
 	public List<Marks> getMarksOfTermByStudent(Long termId, Long studentId){
 		Student studentObject = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
+		AcademicYear activeYear = academicYearService.getActiveAcademicYear();
 		Term termObject = termService.getTermById(termId).orElseThrow(NoSuchElementException::new);
-		return marksRepo.findBySubject_TermAndStudent(termObject, studentObject);
+		return marksRepo.findBySubject_TermAndStudentAndAcademicYear(termObject, studentObject, activeYear);
 	}
 	
 	public List<Marks> getMarksOfTermByClassAndSubject(Long termId, String studentClass, Long subjectId){
@@ -66,9 +73,10 @@ public class MarksService {
 	            .orElseThrow(() -> new RuntimeException("Term not found with ID: " + termId));
 	    Subject subject = subService.getSubjectById(subjectId)
 	            .orElseThrow(() -> new RuntimeException("Subject not found with ID: " + subjectId));
+	    AcademicYear activeYear = academicYearService.getActiveAcademicYear();
 
 	    // Fetch marks using the repository query
-	    return marksRepo.findBySubject_TermAndSubject(term, subject).stream()
+	    return marksRepo.findBySubject_TermAndSubjectAndAcademicYear(term, subject, activeYear).stream()
 	            .filter(tempMarks -> tempMarks.getStudent().getStudentClass().equals(StudentClass.valueOf(studentClass)))
 	            .toList();
 	}
@@ -88,7 +96,8 @@ public class MarksService {
 	public byte[] generateMarksSheet(Long studentId, Long termId) {
 		Student student = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
 		Term term = termService.getTermById(termId).orElseThrow(NoSuchElementException::new);
-		List<Marks> marksList = marksRepo.findBySubject_TermAndStudent(term, student);
+		AcademicYear activeYear = academicYearService.getActiveAcademicYear();
+		List<Marks> marksList = marksRepo.findBySubject_TermAndStudentAndAcademicYear(term, student, activeYear);
 		// Generate PDF
         try (PDDocument document = new PDDocument(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             PDPage page = new PDPage();

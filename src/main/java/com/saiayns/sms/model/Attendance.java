@@ -28,6 +28,10 @@ public class Attendance {
     @Enumerated(EnumType.STRING)
     private AttendanceStatusEnum status;
     
+    @ManyToOne
+    @JoinColumn(name = "academic_year_id", nullable = false)
+    private AcademicYear academicYear;
+    
 	public Long getId() {
 		return id;
 	}
@@ -51,6 +55,12 @@ public class Attendance {
 	}
 	public void setStatus(AttendanceStatusEnum status) {
 		this.status = status;
+	}
+	public AcademicYear getAcademicYear() {
+		return academicYear;
+	}
+	public void setAcademicYear(AcademicYear academicYear) {
+		this.academicYear = academicYear;
 	}
     
 }

@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Term {
@@ -16,7 +18,23 @@ public class Term {
     private String name;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String description;
     
+    @ManyToOne
+    @JoinColumn(name = "academic_year_id", nullable = false)
+    private AcademicYear academicYear;
+    
+	public Term(String name, LocalDate startDate, LocalDate endDate, AcademicYear academicYear, String description) {
+		super();
+		this.name = name;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.academicYear = academicYear;
+		this.description = description;
+	}
+	public Term(){
+		super();
+	}
 	public Long getId() {
 		return id;
 	}
@@ -41,5 +59,17 @@ public class Term {
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
- 
+	public AcademicYear getAcademicYear() {
+		return academicYear;
+	}
+	public void setAcademicYear(AcademicYear academicYear) {
+		this.academicYear = academicYear;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 }

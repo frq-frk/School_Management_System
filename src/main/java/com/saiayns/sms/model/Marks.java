@@ -23,6 +23,10 @@ public class Marks {
     private Integer marksObtained;
     private String remarks;
     
+    @ManyToOne
+    @JoinColumn(name = "academic_year_id", nullable = false)
+    private AcademicYear academicYear;
+    
 	public Long getId() {
 		return id;
 	}
@@ -53,4 +57,11 @@ public class Marks {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
+	public AcademicYear getAcademicYear() {
+		return academicYear;
+	}
+	public void setAcademicYear(AcademicYear academicYear) {
+		this.academicYear = academicYear;
+	}
+	
 }
