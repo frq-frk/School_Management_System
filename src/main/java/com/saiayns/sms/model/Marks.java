@@ -27,6 +27,15 @@ public class Marks {
     @JoinColumn(name = "academic_year_id", nullable = false)
     private AcademicYear academicYear;
     
+	public Marks(Student student, Subject subject, Integer marksObtained, String remarks, AcademicYear academicYear) {
+		super();
+		this.student = student;
+		this.subject = subject;
+		this.marksObtained = marksObtained;
+		this.remarks = remarks;
+		this.academicYear = academicYear;
+	}
+	public Marks() {}
 	public Long getId() {
 		return id;
 	}

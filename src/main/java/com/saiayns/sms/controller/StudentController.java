@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.saiayns.sms.dto.StudentDTO;
+import com.saiayns.sms.dto.student.StudentDTO;
 import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.StudentService;

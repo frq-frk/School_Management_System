@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.saiayns.sms.dto.StudentDTO;
+import com.saiayns.sms.dto.student.StudentDTO;
 import com.saiayns.sms.model.AcademicYear;
 import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;

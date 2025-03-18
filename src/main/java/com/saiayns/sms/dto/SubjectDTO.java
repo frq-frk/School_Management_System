@@ -3,18 +3,20 @@ package com.saiayns.sms.dto;
 import com.saiayns.sms.model.Subject;
 
 public class SubjectDTO {
+	private Long id;
 	private String name;
 	private String subCode;
     private Integer maxMarks;
     private Integer passMarks;
     private Long termId;
     
-	public SubjectDTO(String name, String subCode, Integer maxMarks, Integer passMarks) {
+	public SubjectDTO(Long id, String name, String subCode, Integer maxMarks, Integer passMarks) {
 		super();
 		this.name = name;
 		this.subCode = subCode;
 		this.maxMarks = maxMarks;
 		this.passMarks = passMarks;
+		this.id = id;
 	}
 	public String getName() {
 		return name;
@@ -47,8 +49,14 @@ public class SubjectDTO {
 		this.passMarks = passMarks;
 	}
 	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public static SubjectDTO toDTO(Subject subject) {
-		return new SubjectDTO(subject.getName(), subject.getSubCode(), subject.getMaxMarks(), subject.getPassMarks());
+		return new SubjectDTO(subject.getId(), subject.getName(), subject.getSubCode(), subject.getMaxMarks(), subject.getPassMarks());
 	}
 	
 }

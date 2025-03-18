@@ -3,6 +3,7 @@ package com.saiayns.sms.service;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -12,7 +13,10 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.saiayns.sms.dto.MarksDTO;
+import com.saiayns.sms.dto.SubjectDTO;
+import com.saiayns.sms.dto.marks.MarksDTO;
+import com.saiayns.sms.dto.marks.MarksMinimalDTO;
+import com.saiayns.sms.dto.student.StudentMinimalDTO;
 import com.saiayns.sms.model.AcademicYear;
 import com.saiayns.sms.model.Marks;
 import com.saiayns.sms.model.Student;
@@ -22,6 +26,8 @@ import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.notifications.impl.SMSNotificationService;
 import com.saiayns.sms.repository.MarksRepository;
 import com.saiayns.sms.utils.Helper;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class MarksService {
@@ -47,8 +53,8 @@ public class MarksService {
 	@Autowired
 	private AcademicYearService academicYearService;
 	
-	public Marks addMarks(Long studentId, MarksDTO marks) {
-		Student studentObject = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
+	public Marks addMarks(MarksDTO marks) {
+		Student studentObject = studentService.getStudentById(marks.getStudentId()).orElseThrow(NoSuchElementException::new);
 		Subject subjectObject = subService.getSubjectById(marks.getSubjectId()).orElseThrow(NoSuchElementException::new);
 		AcademicYear activeYear = academicYearService.getActiveAcademicYear();
 		Marks marksObj = new Marks();
@@ -60,14 +66,59 @@ public class MarksService {
 		return marksRepo.save(marksObj);
 	}
 	
-	public List<Marks> getMarksOfTermByStudent(Long termId, Long studentId){
+	@Transactional
+	public void addMarksForClass(StudentClass studentClass, Long subjectId, List<MarksDTO> marksList) {
+	    // Fetch the active academic year
+	    AcademicYear activeAcademicYear = academicYearService.getActiveAcademicYear();
+
+	    // Fetch the subject and validate
+	    Subject subject = subService.getSubjectById(subjectId)
+	            .orElseThrow(() -> new IllegalArgumentException("Subject not found with ID: " + subjectId));
+
+	    Term term = subject.getTerm();
+	    
+	    // Validate subject belongs to a term and that term belongs to the active academic year
+	    if (term == null || !term.getAcademicYear().equals(activeAcademicYear)) {
+	        throw new IllegalStateException("Subject does not belong to any term in the active academic year.");
+	    }
+
+	    // Fetch all students in the class linked to the active academic year
+	    List<Student> students = studentService.getAllStudentsByClass(studentClass);
+
+	    // Map DTO to Marks entity and save
+	    List<Marks> marksEntities = marksList.stream()
+	        .map(dto -> {
+	            Student student = students.stream()
+	                .filter(s -> s.getId().equals(dto.getStudentId()))
+	                .findFirst()
+	                .orElseThrow(() -> new IllegalArgumentException("Student ID " + dto.getStudentId() + " not found in class."));
+
+	            return new Marks(student, subject, dto.getMarksObtained(), dto.getRemarks(), activeAcademicYear);
+	        })
+	        .collect(Collectors.toList());
+
+	    marksRepo.saveAll(marksEntities);
+	}
+
+	
+	public List<MarksMinimalDTO> getMarksOfTermByStudent(Long termId, Long studentId){
 		Student studentObject = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
 		AcademicYear activeYear = academicYearService.getActiveAcademicYear();
 		Term termObject = termService.getTermById(termId).orElseThrow(NoSuchElementException::new);
-		return marksRepo.findBySubject_TermAndStudentAndAcademicYear(termObject, studentObject, activeYear);
+		List<Marks> marksList = marksRepo.findBySubject_TermAndStudentAndAcademicYear(termObject, studentObject, activeYear);
+		return marksList.stream()
+	            .map(marks -> new MarksMinimalDTO(
+	                    marks.getId(),
+	                    marks.getMarksObtained(),
+	                    marks.getRemarks(),
+	                    new StudentMinimalDTO(marks.getStudent().getId(), marks.getStudent().getName(), marks.getStudent().getStudentClass()),  // Assuming a lightweight StudentDTO constructor
+	                    new SubjectDTO(marks.getSubject().getId() ,marks.getSubject().getName(), marks.getSubject().getSubCode(), marks.getSubject().getMaxMarks(), marks.getSubject().getPassMarks()),  // Assuming a lightweight SubjectDTO constructor
+	                    marks.getSubject().getTerm().getName()
+	            ))
+	            .collect(Collectors.toList());
 	}
 	
-	public List<Marks> getMarksOfTermByClassAndSubject(Long termId, String studentClass, Long subjectId){
+	public List<MarksMinimalDTO> getMarksOfTermByClassAndSubject(Long termId, String studentClass, Long subjectId){
 		 // Fetch Term and Subject entities from their respective repositories
 	    Term term = termService.getTermById(termId)
 	            .orElseThrow(() -> new RuntimeException("Term not found with ID: " + termId));
@@ -76,9 +127,19 @@ public class MarksService {
 	    AcademicYear activeYear = academicYearService.getActiveAcademicYear();
 
 	    // Fetch marks using the repository query
-	    return marksRepo.findBySubject_TermAndSubjectAndAcademicYear(term, subject, activeYear).stream()
+	    List<Marks> marksList = marksRepo.findBySubject_TermAndSubjectAndAcademicYear(term, subject, activeYear).stream()
 	            .filter(tempMarks -> tempMarks.getStudent().getStudentClass().equals(StudentClass.valueOf(studentClass)))
 	            .toList();
+	    return marksList.stream()
+	            .map(marks -> new MarksMinimalDTO(
+	                    marks.getId(),
+	                    marks.getMarksObtained(),
+	                    marks.getRemarks(),
+	                    new StudentMinimalDTO(marks.getStudent().getId(), marks.getStudent().getName(), marks.getStudent().getStudentClass()),  // Assuming a lightweight StudentDTO constructor
+	                    new SubjectDTO(marks.getSubject().getId() ,marks.getSubject().getName(), marks.getSubject().getSubCode(), marks.getSubject().getMaxMarks(), marks.getSubject().getPassMarks()),  // Assuming a lightweight SubjectDTO constructor
+	                    marks.getSubject().getTerm().getName()
+	            ))
+	            .collect(Collectors.toList());
 	}
 	
 	public List<Student> generateOTP(String guardianPhone) {
