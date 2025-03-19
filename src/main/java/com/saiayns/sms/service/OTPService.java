@@ -6,8 +6,8 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.saiayns.sms.model.OTP;
-import com.saiayns.sms.repository.OTPRepository;
+import com.saiayns.sms.tenant.model.OTP;
+import com.saiayns.sms.tenant.repository.OTPRepository;
 
 @Service
 public class OTPService {

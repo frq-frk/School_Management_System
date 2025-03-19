@@ -1,13 +1,13 @@
-package com.saiayns.sms.repository;
+package com.saiayns.sms.tenant.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.saiayns.sms.model.AcademicYear;
-import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
+import com.saiayns.sms.tenant.model.AcademicYear;
+import com.saiayns.sms.tenant.model.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Long>{
 	

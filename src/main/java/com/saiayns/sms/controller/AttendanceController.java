@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.saiayns.sms.dto.AttendanceDTO;
 import com.saiayns.sms.dto.AttendanceRequest;
 import com.saiayns.sms.dto.AttendanceRequestWrapper;
-import com.saiayns.sms.model.Attendance;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.AttendanceService;
+import com.saiayns.sms.tenant.model.Attendance;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 

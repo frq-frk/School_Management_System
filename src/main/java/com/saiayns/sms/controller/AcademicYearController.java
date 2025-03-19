@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.saiayns.sms.model.AcademicYear;
 import com.saiayns.sms.service.AcademicYearService;
+import com.saiayns.sms.tenant.model.AcademicYear;
 
 @RestController
 @RequestMapping("/api/academic-year")

@@ -7,9 +7,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.saiayns.sms.model.User;
-import com.saiayns.sms.repository.UserRepository;
 import com.saiayns.sms.security.JwtUtil;
+import com.saiayns.sms.tenant.model.User;
+import com.saiayns.sms.tenant.repository.UserRepository;
 
 @Service
 public class UserService {

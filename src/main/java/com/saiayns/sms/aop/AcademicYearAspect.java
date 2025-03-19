@@ -5,8 +5,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-import com.saiayns.sms.model.AcademicYear;
 import com.saiayns.sms.service.AcademicYearService;
+import com.saiayns.sms.tenant.model.AcademicYear;
 
 @Aspect
 @Component

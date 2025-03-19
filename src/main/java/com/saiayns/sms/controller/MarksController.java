@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.saiayns.sms.dto.marks.MarksDTO;
 import com.saiayns.sms.dto.marks.MarksMinimalDTO;
-import com.saiayns.sms.model.Marks;
-import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.MarksService;
+import com.saiayns.sms.tenant.model.Marks;
+import com.saiayns.sms.tenant.model.Student;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 

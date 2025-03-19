@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saiayns.sms.dto.SubjectDTO;
-import com.saiayns.sms.model.Subject;
 import com.saiayns.sms.service.SubjectService;
+import com.saiayns.sms.tenant.model.Subject;
 
 @RestController
 @RequestMapping("/api/subjects")

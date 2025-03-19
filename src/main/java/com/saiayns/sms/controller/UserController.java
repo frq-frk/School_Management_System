@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.saiayns.sms.dto.AuthRequestDTO;
-import com.saiayns.sms.model.User;
 import com.saiayns.sms.service.UserService;
+import com.saiayns.sms.tenant.model.User;
 import com.saiayns.sms.utils.SecurityHelperUtil;
 
 @RestController

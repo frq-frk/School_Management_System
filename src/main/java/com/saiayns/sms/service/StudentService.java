@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.saiayns.sms.dto.student.StudentDTO;
-import com.saiayns.sms.model.AcademicYear;
-import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
-import com.saiayns.sms.repository.StudentRepository;
+import com.saiayns.sms.tenant.model.AcademicYear;
+import com.saiayns.sms.tenant.model.Student;
+import com.saiayns.sms.tenant.repository.StudentRepository;
 import com.saiayns.sms.utils.ExcelHelper;
 
 @Service

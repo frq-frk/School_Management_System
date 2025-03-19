@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.saiayns.sms.dto.student.StudentDTO;
-import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.service.StudentService;
+import com.saiayns.sms.tenant.model.Student;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;

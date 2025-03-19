@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.saiayns.sms.dto.AttendanceDTO;
 import com.saiayns.sms.dto.AttendanceRequest;
-import com.saiayns.sms.model.AcademicYear;
-import com.saiayns.sms.model.Attendance;
-import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.AttendanceStatusEnum;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.notifications.impl.SMSNotificationService;
-import com.saiayns.sms.repository.AttendanceRepository;
+import com.saiayns.sms.tenant.model.AcademicYear;
+import com.saiayns.sms.tenant.model.Attendance;
+import com.saiayns.sms.tenant.model.Student;
+import com.saiayns.sms.tenant.repository.AttendanceRepository;
 import com.saiayns.sms.utils.Helper;
 
 import jakarta.transaction.Transactional;

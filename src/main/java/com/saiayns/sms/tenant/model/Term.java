@@ -1,4 +1,4 @@
-package com.saiayns.sms.model;
+package com.saiayns.sms.tenant.model;
 
 import java.time.LocalDate;
 

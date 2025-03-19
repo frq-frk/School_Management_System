@@ -1,14 +1,14 @@
-package com.saiayns.sms.repository;
+package com.saiayns.sms.tenant.repository;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.saiayns.sms.model.AcademicYear;
-import com.saiayns.sms.model.Marks;
-import com.saiayns.sms.model.Student;
-import com.saiayns.sms.model.Subject;
-import com.saiayns.sms.model.Term;
+import com.saiayns.sms.tenant.model.AcademicYear;
+import com.saiayns.sms.tenant.model.Marks;
+import com.saiayns.sms.tenant.model.Student;
+import com.saiayns.sms.tenant.model.Subject;
+import com.saiayns.sms.tenant.model.Term;
 
 
 public interface MarksRepository extends JpaRepository<Marks, Long> {

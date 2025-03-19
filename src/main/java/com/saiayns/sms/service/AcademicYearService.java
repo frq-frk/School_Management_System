@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.saiayns.sms.model.AcademicYear;
-import com.saiayns.sms.repository.AcademicYearRepository;
+import com.saiayns.sms.tenant.model.AcademicYear;
+import com.saiayns.sms.tenant.repository.AcademicYearRepository;
 
 import jakarta.transaction.Transactional;
 

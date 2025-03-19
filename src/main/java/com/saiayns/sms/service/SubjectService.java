@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.saiayns.sms.dto.SubjectDTO;
-import com.saiayns.sms.model.AcademicYear;
-import com.saiayns.sms.model.Subject;
-import com.saiayns.sms.model.Term;
-import com.saiayns.sms.repository.SubjectRepository;
+import com.saiayns.sms.tenant.model.AcademicYear;
+import com.saiayns.sms.tenant.model.Subject;
+import com.saiayns.sms.tenant.model.Term;
+import com.saiayns.sms.tenant.repository.SubjectRepository;
 
 @Service
 public class SubjectService {

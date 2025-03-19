@@ -1,6 +1,6 @@
 package com.saiayns.sms.dto;
 
-import com.saiayns.sms.model.Subject;
+import com.saiayns.sms.tenant.model.Subject;
 
 public class SubjectDTO {
 	private Long id;

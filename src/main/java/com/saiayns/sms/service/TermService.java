@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.saiayns.sms.model.AcademicYear;
-import com.saiayns.sms.model.Term;
-import com.saiayns.sms.repository.TermRepository;
+import com.saiayns.sms.tenant.model.AcademicYear;
+import com.saiayns.sms.tenant.model.Term;
+import com.saiayns.sms.tenant.repository.TermRepository;
 
 @Service
 public class TermService {

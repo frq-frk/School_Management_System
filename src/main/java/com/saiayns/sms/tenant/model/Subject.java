@@ -1,4 +1,4 @@
-package com.saiayns.sms.model;
+package com.saiayns.sms.tenant.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

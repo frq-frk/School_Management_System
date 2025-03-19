@@ -9,9 +9,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import com.saiayns.sms.model.Student;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.model.enums.StudentGender;
+import com.saiayns.sms.tenant.model.Student;
 
 public class ExcelHelper {
 	

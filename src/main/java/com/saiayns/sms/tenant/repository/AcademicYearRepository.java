@@ -1,4 +1,4 @@
-package com.saiayns.sms.repository;
+package com.saiayns.sms.tenant.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import com.saiayns.sms.model.AcademicYear;
+import com.saiayns.sms.tenant.model.AcademicYear;
 
 public interface AcademicYearRepository extends JpaRepository<AcademicYear, Long> {
 	Optional<AcademicYear> findByIsActiveTrue();
