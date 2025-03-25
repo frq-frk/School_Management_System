@@ -50,7 +50,6 @@ public class AttendanceService {
 		return attendanceRepo.save(attendance);
 	}
 	
-	@Transactional
     public void markClassAttendance(StudentClass studentClass, List<AttendanceRequest> attendanceRequests) {
 		AcademicYear activeYear = academicYearService.getActiveAcademicYear();
 		for (AttendanceRequest request : attendanceRequests) {

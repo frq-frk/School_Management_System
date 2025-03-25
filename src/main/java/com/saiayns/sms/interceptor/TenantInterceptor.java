@@ -1,6 +1,7 @@
 package com.saiayns.sms.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -10,6 +11,7 @@ import com.saiayns.sms.resolver.HttpHeaderTenantResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Component
 public class TenantInterceptor implements HandlerInterceptor{
 	
 	@Autowired
@@ -18,7 +20,9 @@ public class TenantInterceptor implements HandlerInterceptor{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		TenantContext.setTenantId(tenantResolver.resolveTenant(request));
+		String tenantId = tenantResolver.resolveTenant(request);
+		System.out.println("Received Tenant ID: " + tenantId); // Debugging
+		TenantContext.setTenantId(tenantId);
 		return true;
 	}
 

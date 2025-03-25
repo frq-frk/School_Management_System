@@ -1,6 +1,7 @@
 package com.saiayns.sms.service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +28,6 @@ import com.saiayns.sms.tenant.model.Subject;
 import com.saiayns.sms.tenant.model.Term;
 import com.saiayns.sms.tenant.repository.MarksRepository;
 import com.saiayns.sms.utils.Helper;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class MarksService {
@@ -66,7 +66,6 @@ public class MarksService {
 		return marksRepo.save(marksObj);
 	}
 	
-	@Transactional
 	public void addMarksForClass(StudentClass studentClass, Long subjectId, List<MarksDTO> marksList) {
 	    // Fetch the active academic year
 	    AcademicYear activeAcademicYear = academicYearService.getActiveAcademicYear();
@@ -78,7 +77,7 @@ public class MarksService {
 	    Term term = subject.getTerm();
 	    
 	    // Validate subject belongs to a term and that term belongs to the active academic year
-	    if (term == null || !term.getAcademicYear().equals(activeAcademicYear)) {
+	    if (term == null || !(term.getAcademicYear().getId()==activeAcademicYear.getId())) {
 	        throw new IllegalStateException("Subject does not belong to any term in the active academic year.");
 	    }
 
@@ -155,97 +154,112 @@ public class MarksService {
 	}
 	
 	public byte[] generateMarksSheet(Long studentId, Long termId) {
-		Student student = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
-		Term term = termService.getTermById(termId).orElseThrow(NoSuchElementException::new);
-		AcademicYear activeYear = academicYearService.getActiveAcademicYear();
-		List<Marks> marksList = marksRepo.findBySubject_TermAndStudentAndAcademicYear(term, student, activeYear);
-		// Generate PDF
-        try (PDDocument document = new PDDocument(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            PDPage page = new PDPage();
-            document.addPage(page);
+	    Student student = studentService.getStudentById(studentId).orElseThrow(NoSuchElementException::new);
+	    Term term = termService.getTermById(termId).orElseThrow(NoSuchElementException::new);
+	    AcademicYear activeYear = academicYearService.getActiveAcademicYear();
+	    List<Marks> marksList = marksRepo.findBySubject_TermAndStudentAndAcademicYear(term, student, activeYear);
 
-            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                // School Name Heading
-                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 22);
-                contentStream.beginText();
-                contentStream.newLineAtOffset(200, 750); // Center-aligned heading
-                contentStream.showText("XYZ International School");
-                contentStream.endText();
+	    try (PDDocument document = new PDDocument(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+	        PDPage page = new PDPage();
+	        document.addPage(page);
 
-                // Add a horizontal line under the heading
-                contentStream.setLineWidth(1);
-                contentStream.moveTo(50, 740);
-                contentStream.lineTo(550, 740);
-                contentStream.stroke();
+	        try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
+	            float margin = 50;
+	            float yStart = 750;
+	            float tableWidth = page.getMediaBox().getWidth() - 2 * margin;
+	            float yPosition = yStart;
 
-                // Student Details
-                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 14);
-                contentStream.beginText();
-                contentStream.newLineAtOffset(50, 700);
-                contentStream.showText("Student Details:");
-                contentStream.endText();
+	            // 🔹 School Header
+	            contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 22);
+	            contentStream.beginText();
+	            contentStream.newLineAtOffset(margin + 120, yPosition);
+	            contentStream.showText("XYZ International School");
+	            contentStream.endText();
 
-                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
-                contentStream.beginText();
-                contentStream.newLineAtOffset(70, 680);
-                contentStream.setLeading(20f);
-                contentStream.showText("Name: " + student.getName());
-                contentStream.newLine();
-                contentStream.showText("Class: " + student.getStudentClass());
-                contentStream.newLine();
-                contentStream.showText("Guardian: " + student.getGuardianName());
-                contentStream.newLine();
-                contentStream.showText("Phone: " + student.getGuardianPhone());
-                contentStream.endText();
+	            // 🔹 School Address
+	            contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+	            contentStream.beginText();
+	            contentStream.newLineAtOffset(margin + 150, yPosition - 20);
+	            contentStream.showText("123 School Road, Cityname, Country");
+	            contentStream.endText();
 
-                // Marks Table Header
-                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 14);
-                contentStream.beginText();
-                contentStream.newLineAtOffset(50, 600);
-                contentStream.showText("Marks Details:");
-                contentStream.endText();
+	            // 🔹 Draw a separator line
+	            yPosition -= 40;
+	            contentStream.moveTo(margin, yPosition);
+	            contentStream.lineTo(margin + tableWidth, yPosition);
+	            contentStream.stroke();
 
-                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 12);
-                contentStream.beginText();
-                contentStream.newLineAtOffset(50, 580);
-                contentStream.showText("Subject");
-                contentStream.newLineAtOffset(150, 0);
-                contentStream.showText("Marks Obtained");
-                contentStream.newLineAtOffset(150, 0);
-                contentStream.showText("Term");
-                contentStream.endText();
+	            // 🔹 Student Details Table
+	            yPosition -= 30;
+	            float rowHeight = 20;
+	            float col1Width = 150;
+	            float col2Width = tableWidth - col1Width;
 
-                // Draw horizontal line for table header
-                contentStream.setLineWidth(0.5f);
-                contentStream.moveTo(50, 575);
-                contentStream.lineTo(550, 575);
-                contentStream.stroke();
+	            drawTableRow(contentStream, margin, yPosition, tableWidth, rowHeight, 
+	                        new String[]{"Student Name", student.getName()});
+	            yPosition -= rowHeight;
+	            drawTableRow(contentStream, margin, yPosition, tableWidth, rowHeight, 
+	                        new String[]{"Class", String.valueOf(student.getStudentClass())});
+	            yPosition -= rowHeight;
+	            drawTableRow(contentStream, margin, yPosition, tableWidth, rowHeight, 
+	                        new String[]{"Guardian", student.getGuardianName()});
+	            yPosition -= rowHeight;
+	            drawTableRow(contentStream, margin, yPosition, tableWidth, rowHeight, 
+	                        new String[]{"Phone", student.getGuardianPhone()});
+	            yPosition -= rowHeight;
+	            drawTableRow(contentStream, margin, yPosition, tableWidth, rowHeight, 
+	                        new String[]{"Address", student.getAddress()});
+	            yPosition -= rowHeight + 20; // Add spacing after student details
 
-                // Marks Table Rows
-                int yPosition = 550; // Starting Y position for marks rows
-                contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD), 12);
+	            // 🔹 Marks Table Header
+	            drawTableRow(contentStream, margin, yPosition, tableWidth, rowHeight, 
+	                        new String[]{"Subject", "Marks", "Max Marks", "Term"});
+	            yPosition -= rowHeight;
 
-                for (Marks marks : marksList) {
-                    contentStream.beginText();
-                    contentStream.newLineAtOffset(50, yPosition);
-                    contentStream.showText(marks.getSubject().getName());
-                    contentStream.newLineAtOffset(150, 0);
-                    contentStream.showText(marks.getMarksObtained().toString());
-                    contentStream.newLineAtOffset(150, 0);
-                    contentStream.showText(marks.getSubject().getTerm().getName());
-                    contentStream.endText();
+	            // 🔹 Marks Table Rows
+	            for (Marks marks : marksList) {
+	                drawTableRow(contentStream, margin, yPosition, tableWidth, rowHeight, 
+	                            new String[]{
+	                                marks.getSubject().getName(),
+	                                marks.getMarksObtained().toString(),
+	                                String.valueOf(marks.getSubject().getMaxMarks()),
+	                                marks.getSubject().getTerm().getName()
+	                            });
+	                yPosition -= rowHeight;
+	            }
+	        }
 
-                    yPosition -= 20; // Move down for the next row
-                }
-
-                // End of Content Stream
-            }
-
-            // Save and return as a byte array
-            document.save(outputStream);
-            return outputStream.toByteArray();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to generate marks sheet", e);
-        }
+	        // 🔹 Save and return as byte array
+	        document.save(outputStream);
+	        return outputStream.toByteArray();
+	    } catch (Exception e) {
+	        throw new RuntimeException("Failed to generate marks sheet", e);
+	    }
 	}
+	
+	private void drawTableRow(PDPageContentStream contentStream, float x, float y, float tableWidth, float rowHeight, String[] values) throws IOException {
+	    float cellWidth = tableWidth / values.length;
+	    float textMargin = 5;
+
+	    contentStream.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+
+	    for (int i = 0; i < values.length; i++) {
+	        // 🔹 Draw cell border
+	        contentStream.moveTo(x + (i * cellWidth), y);
+	        contentStream.lineTo(x + (i * cellWidth), y - rowHeight);
+	        contentStream.stroke();
+
+	        // 🔹 Add text inside the cell
+	        contentStream.beginText();
+	        contentStream.newLineAtOffset(x + (i * cellWidth) + textMargin, y - 15);
+	        contentStream.showText(values[i]);
+	        contentStream.endText();
+	    }
+
+	    // 🔹 Draw row bottom line
+	    contentStream.moveTo(x, y - rowHeight);
+	    contentStream.lineTo(x + tableWidth, y - rowHeight);
+	    contentStream.stroke();
+	}
+
 }

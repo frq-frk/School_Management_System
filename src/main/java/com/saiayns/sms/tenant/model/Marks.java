@@ -1,5 +1,6 @@
 package com.saiayns.sms.tenant.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,8 @@ public class Marks {
     @ManyToOne
     @JoinColumn(name = "subject_id")
     private Subject subject;
+    
+    @Column(name="marks_obtained")
     private Integer marksObtained;
     private String remarks;
     

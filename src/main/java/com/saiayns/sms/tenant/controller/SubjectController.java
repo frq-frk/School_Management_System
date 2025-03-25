@@ -1,4 +1,4 @@
-package com.saiayns.sms.controller;
+package com.saiayns.sms.tenant.controller;
 
 import java.util.List;
 

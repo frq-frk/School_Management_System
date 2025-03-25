@@ -7,8 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="academic_year")
 public class AcademicYear {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,15 +19,16 @@ public class AcademicYear {
     @Column(nullable = false, unique = true)
     private String name; // e.g., "2024-2025"
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "start_date")
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "end_date")
     private LocalDate endDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="is_active")
     private boolean isActive = true; // Only one academic year can be active at a time
     
+    @Column(name="is_recently_closed")
     private Boolean isRecentlyClosed = false;
 
     // Constructors

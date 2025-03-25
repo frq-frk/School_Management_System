@@ -1,5 +1,6 @@
 package com.saiayns.sms.tenant.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,8 +15,11 @@ public class Subject {
     private Long id;
 
     private String name;
+    @Column(name="sub_code")
     private String subCode;
+    @Column(name="max_marks")
     private Integer maxMarks;
+    @Column(name="pass_marks")
     private Integer passMarks;
 
     @ManyToOne

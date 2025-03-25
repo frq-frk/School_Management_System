@@ -15,6 +15,8 @@ import com.saiayns.sms.tenant.model.Student;
 import com.saiayns.sms.tenant.repository.StudentRepository;
 import com.saiayns.sms.utils.ExcelHelper;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class StudentService {
 

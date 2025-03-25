@@ -20,7 +20,6 @@ public class AcademicYearService {
 				.orElseThrow(() -> new RuntimeException("No active academic year found!"));
 	}
 
-	@Transactional
 	public AcademicYear createNewAcademicYear(LocalDate startDate, LocalDate endDate) {
 		// Check if there's an existing active academic year
 		if (academicYearRepo.existsByIsActiveTrue()) {
@@ -33,7 +32,6 @@ public class AcademicYearService {
 		return academicYearRepo.save(newYear);
 	}
 
-	@Transactional
 	public AcademicYear closeCurrentAcademicYear() {
 		// Fetch the currently active academic year
 		AcademicYear activeAcademicYear = academicYearRepo.findByIsActiveTrue()

@@ -35,7 +35,7 @@ public class SecurityConfig {
 				})).authorizeHttpRequests(auth -> auth
 						// Permit these endpoints without authentication
 						.requestMatchers("/api/user/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",
-								"/api/marks/download-request", "/api/marks/download-validate", "/api/terms/get")
+								"/api/marks/download-request", "/api/marks/download-validate", "/api/terms/get", "/api/tenant/**")
 						.permitAll()
 						// Authenticate all other requests
 						.anyRequest().authenticated())

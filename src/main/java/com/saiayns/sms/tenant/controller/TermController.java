@@ -1,4 +1,4 @@
-package com.saiayns.sms.controller;
+package com.saiayns.sms.tenant.controller;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,9 +25,9 @@ public class TermController {
     public ResponseEntity<Term> createTerm(@RequestParam String name,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam String desciprtion
+            @RequestParam String description
     		) {
-        return ResponseEntity.ok(termService.createTerm(name, startDate, endDate, desciprtion));
+        return ResponseEntity.ok(termService.createTerm(name, startDate, endDate, description));
     }
 
     @GetMapping("/get")

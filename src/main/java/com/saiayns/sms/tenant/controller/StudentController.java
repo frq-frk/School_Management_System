@@ -1,4 +1,4 @@
-package com.saiayns.sms.controller;
+package com.saiayns.sms.tenant.controller;
 
 import java.util.List;
 
@@ -21,7 +21,6 @@ import com.saiayns.sms.service.StudentService;
 import com.saiayns.sms.tenant.model.Student;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.transaction.Transactional;
 
 @RestController
 @SecurityRequirement(name = "BearerAuth")
@@ -62,7 +61,6 @@ public class StudentController {
 	}
 	
 	@PutMapping("/promote")
-	@Transactional
 	public ResponseEntity<String> promoteStudents(@RequestBody List<Long> studentIds) {
 		studentService.promoteStudents(studentIds);
 		return ResponseEntity.ok("Students promoted successfully.");

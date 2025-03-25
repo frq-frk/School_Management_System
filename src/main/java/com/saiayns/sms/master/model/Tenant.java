@@ -1,5 +1,7 @@
 package com.saiayns.sms.master.model;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,35 +13,35 @@ import jakarta.persistence.Table;
 @Table(name = "tenant")
 public class Tenant {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(unique = true, nullable = false)
-    private String tenantId;
+    @Column(unique = true, nullable = false, name="sub_dom")
+    private String subDom;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="db_url")
     private String dbUrl;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="db_username")
     private String dbUsername;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name="db_password")
     private String dbPassword;
+    
+	public String getSubDom() {
+		return subDom;
+	}
 
-	public Long getId() {
+	public void setSubDom(String subDom) {
+		this.subDom = subDom;
+	}
+
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
-	}
-
-	public String getTenantId() {
-		return tenantId;
-	}
-
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
 	}
 
 	public String getDbUrl() {

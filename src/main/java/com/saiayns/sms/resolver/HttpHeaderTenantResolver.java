@@ -10,6 +10,6 @@ public class HttpHeaderTenantResolver implements TenantResolver<HttpServletReque
 
 	@Override
 	public String resolveTenant(@NotNull HttpServletRequest request) {
-		return request.getHeader("X-TenantId");
+		return request.getHeader("X-Tenant-ID");
 	}	
 }

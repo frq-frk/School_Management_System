@@ -1,4 +1,4 @@
-package com.saiayns.sms.controller;
+package com.saiayns.sms.tenant.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -3,6 +3,8 @@ package com.saiayns.sms.tenant.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
@@ -21,10 +23,10 @@ public class TenantDataSourceProvider {
     @Autowired
     private TenantRepository tenantRepository;
 
-    private final Map<String, DataSource> tenantDataSources = new ConcurrentHashMap<>();
+    private final Map<UUID, DataSource> tenantDataSources = new ConcurrentHashMap<>();
 
-    public DataSource getTenantDataSource(String tenantId) {
-        return tenantDataSources.computeIfAbsent(tenantId, id -> createDataSource(id));
+    public DataSource getTenantDataSource(UUID tenantId) {
+        return tenantDataSources.computeIfAbsent(tenantId, this::createDataSource);
     }
     
     public Map<Object, Object> getAllTenantDataSources() {
@@ -32,16 +34,16 @@ public class TenantDataSourceProvider {
         
         List<Tenant> tenants = tenantRepository.findAll();
         for (Tenant tenant : tenants) {
-            DataSource tenantDataSource = createDataSource(tenant.getDbUrl());
-            tenantDataSources.put(tenant.getTenantId(), tenantDataSource);
+            DataSource tenantDataSource = createDataSource(tenant.getId());
+            tenantDataSources.put(tenant.getId(), tenantDataSource);
         }
 
         return tenantDataSources;
     }
 
-    private DataSource createDataSource(String tenantId) {
-        Tenant tenant = tenantRepository.findByTenantId(tenantId);
-        if (tenant == null) throw new RuntimeException("Tenant not found");
+    private DataSource createDataSource(UUID tenantId) {
+        Tenant tenant = tenantRepository.findById(tenantId);
+        if (tenant == null) throw new NoSuchElementException("Tenant not found");
 
         return DataSourceBuilder.create()
                 .url(tenant.getDbUrl())

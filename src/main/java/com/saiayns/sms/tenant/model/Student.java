@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.saiayns.sms.model.enums.StudentClass;
 import com.saiayns.sms.model.enums.StudentGender;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,14 +24,19 @@ public class Student {
 
     private String name;
 
+    @Column(name="student_class")
     @Enumerated(EnumType.STRING)
     private StudentClass studentClass;
+    @Column(name="guardian_name")
     private String guardianName;
+    @Column(name="guardian_phone")
     private String guardianPhone;
+    @Column(name="guardian_email")
     private String guardianEmail;
     
     @Enumerated(EnumType.STRING)
     private StudentGender gender;
+    @Column(name="date_of_birth")
     private LocalDate dateOfBirth;
     private String address;
     
