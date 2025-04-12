@@ -16,9 +16,7 @@ import com.saiayns.sms.tenant.model.AcademicYear;
 import com.saiayns.sms.tenant.model.Attendance;
 import com.saiayns.sms.tenant.model.Student;
 import com.saiayns.sms.tenant.repository.AttendanceRepository;
-import com.saiayns.sms.utils.Helper;
-
-import jakarta.transaction.Transactional;
+import com.saiayns.sms.utils.SmsNotificationHelper;
 
 @Service
 public class AttendanceService {
@@ -44,7 +42,7 @@ public class AttendanceService {
 		attendance.setStatus(attendanceDetails.getStatus());
 		attendance.setAcademicYear(activeYear);
 		if (attendanceDetails.getStatus().equals(AttendanceStatusEnum.ABSENT)) {
-			String msg = Helper.getAbsentSMSMessage(studentObject.getGuardianName(), studentObject.getName(), attendanceDetails.getDate().toString(), studentObject.getStudentClass().toString(), "Test School");
+			String msg = SmsNotificationHelper.getAbsentSMSMessage(studentObject.getGuardianName(), studentObject.getName(), attendanceDetails.getDate().toString(), studentObject.getStudentClass().toString(), "Test School");
 			smsService.sendNotification("+91"+studentObject.getGuardianPhone(), msg);
 		}
 		return attendanceRepo.save(attendance);
@@ -68,7 +66,7 @@ public class AttendanceService {
             attendance.setStatus(request.getStatus());
             attendance.setAcademicYear(activeYear);
             if (request.getStatus().equals(AttendanceStatusEnum.ABSENT)) {
-    			String msg = Helper.getAbsentSMSMessage(student.getGuardianName(), student.getName(), request.getDate().toString(), student.getStudentClass().toString(), "Test School");
+    			String msg = SmsNotificationHelper.getAbsentSMSMessage(student.getGuardianName(), student.getName(), request.getDate().toString(), student.getStudentClass().toString(), "Test School");
     			smsService.sendNotification("+91"+student.getGuardianPhone(), msg);
     		}
             attendanceRepo.save(attendance);

@@ -34,8 +34,8 @@ public class SecurityConfig {
 					return config;
 				})).authorizeHttpRequests(auth -> auth
 						// Permit these endpoints without authentication
-						.requestMatchers("/api/user/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",
-								"/api/marks/download-request", "/api/marks/download-validate", "/api/terms/get", "/api/tenant/**")
+						.requestMatchers("/api/test/**","/api/user/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**",
+								"/api/marks/download-request", "/api/marks/download-validate", "/api/terms/get", "/api/tenant/**","/api/institute/**","/api/leadInfo/**", "/api/institute/**")
 						.permitAll()
 						// Authenticate all other requests
 						.anyRequest().authenticated())

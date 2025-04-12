@@ -28,6 +28,14 @@ public class Tenant {
     @Column(nullable = false, name="db_password")
     private String dbPassword;
     
+//    @Enumerated(EnumType.STRING)
+//    @Column(nullable = false)
+//    private TenantStatus status = TenantStatus.ACTIVE; // Active, Pending, Suspended, etc.
+//
+//    public enum TenantStatus {
+//        PENDING, ACTIVE, SUSPENDED, DEACTIVATED
+//    }
+    
 	public String getSubDom() {
 		return subDom;
 	}
@@ -67,8 +75,4 @@ public class Tenant {
 	public void setDbPassword(String dbPassword) {
 		this.dbPassword = dbPassword;
 	}
-
-//    @Enumerated(EnumType.STRING)
-//    private TenantStatus status;
-    
 }

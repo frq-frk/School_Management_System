@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import com.saiayns.sms.tenant.model.AcademicYear;
 import com.saiayns.sms.tenant.repository.AcademicYearRepository;
 
-import jakarta.transaction.Transactional;
-
 @Service
 public class AcademicYearService {
 	@Autowired

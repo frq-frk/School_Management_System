@@ -1,4 +1,4 @@
-package com.saiayns.sms.tenant.service;
+package com.saiayns.sms.master.service;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,6 +23,9 @@ import jakarta.persistence.EntityManagerFactory;
 @Service
 public class TenantService {
 	
+	private final String DB_USERNAME = "devuser";
+	private final String DB_PASSWORD = "Nightwatch@007";
+	
 	@Autowired
 	TenantRepository tenantRepo;
 	
@@ -42,19 +45,19 @@ public class TenantService {
         // Store tenant details in Master DB
         Tenant tenant = new Tenant();
         tenant.setDbUrl(dbUrl);
-        tenant.setDbUsername("devuser");
-        tenant.setDbPassword("Nightwatch@007");
+        tenant.setDbUsername(DB_USERNAME);
+        tenant.setDbPassword(DB_PASSWORD);
         tenant.setSubDom(subDom);
         tenantRepo.save(tenant);
 
         // Dynamically Add to Tenant DataSource
         tenantDataSource.addTenantDataSource(tenant);
         
-        initializeTenantDatabase(dbUrl, "devuser", "Nightwatch@007");
+        initializeTenantDatabase(dbUrl, DB_USERNAME, DB_PASSWORD);
     }
 
     private void createDatabase(String dbName) {
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/", "devuser", "Nightwatch@007");
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/", DB_USERNAME, DB_PASSWORD);
              Statement statement = connection.createStatement()) {
             statement.executeUpdate("CREATE DATABASE " + dbName);
         } catch (SQLException e) {
@@ -90,5 +93,9 @@ public class TenantService {
     public UUID getTenantId(String tenantSubDom) {
     	Tenant tenantObj = tenantRepo.findBySubDom(tenantSubDom).orElseThrow(NoSuchElementException::new);
     	return tenantObj.getId();
+    }
+    
+    public Tenant getTenant(String tenantSubDom) {
+    	return tenantRepo.findBySubDom(tenantSubDom).orElseThrow(NoSuchElementException::new);
     }
 }

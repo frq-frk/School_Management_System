@@ -1,6 +1,6 @@
 package com.saiayns.sms.utils;
 
-public class Helper {
+public class SmsNotificationHelper {
 
 	public static String getAbsentSMSMessage(String guardianName, String studentName, String date, String studentClass,
 			String schoolName) {

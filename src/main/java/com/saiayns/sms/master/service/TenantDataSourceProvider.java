@@ -1,4 +1,4 @@
-package com.saiayns.sms.tenant.service;
+package com.saiayns.sms.master.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,8 +42,7 @@ public class TenantDataSourceProvider {
     }
 
     private DataSource createDataSource(UUID tenantId) {
-        Tenant tenant = tenantRepository.findById(tenantId);
-        if (tenant == null) throw new NoSuchElementException("Tenant not found");
+        Tenant tenant = tenantRepository.findById(tenantId).orElseThrow(NoSuchElementException::new);
 
         return DataSourceBuilder.create()
                 .url(tenant.getDbUrl())
